@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+
+  backend:
+
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_DATABASE: auth
+
+    ports:
+      - 8000:8000
+
+    depends_on:
+      - db
+
+    volumes:
+      - ./backend:/app/backend
+
+    networks:
+      - app
+
+  frontend:
+    container_name: frontend
+    tty: true
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/frontend
+    depends_on:
+      - backend
+    networks:
+      - app
+
+  db:
+    container_name: db
+    image: mysql
+    environment:
+      MYSQL_DATABASE: auth
+      MYSQL_ROOT_PASSWORD: user
+      MYSQL_USER: root
+      MYSQL_PASSWORD: user
+
+    volumes:
+      - ./_db/mysql:/var/lib/mysql
+
+    networks:
+      - app
+    ports:
+      - 3307:3306
+
+networks:
+  app:
+    driver: bridge
