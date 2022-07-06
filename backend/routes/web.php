@@ -25,3 +25,12 @@ Route::get('/', function () {
     // ]);
     return view('welcome');
 });
+
+
+Route::get('/test', function () {
+
+    for ( $i = 0; $i < 10; $i++ ) {
+        echo $i . '<br>';
+    }
+
+});
